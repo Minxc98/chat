@@ -2,6 +2,7 @@ mod config;
 mod handlers;
 mod models;
 mod error;
+mod utils;
 
 use handlers::*;
 use std::ops::Deref;
@@ -18,6 +19,7 @@ pub(crate) struct AppState {
 
 #[derive(Debug)]
 pub(crate) struct AppStateInner {
+    pub(crate) pool: sqlx::PgPool,
     pub(crate) config: AppConfig,
 }
 
@@ -29,16 +31,20 @@ impl Deref for AppState {
 }
 
 impl AppState {
-    pub fn new(config: AppConfig) -> Self {
-        Self {
+    pub async fn new(config: AppConfig) -> Result<Self,AppError> {
+        let pool = sqlx::PgPool::connect(&config.server.db_url)
+            .await
+            .map_err(|_| AppError::Database(sqlx::Error::Configuration("Failed to connect to database".into())))?;
+        Ok(Self {
             inner: Arc::new(AppStateInner {
+                pool,
                 config,
             }),
-        }
+        })
     }
 }
-pub fn get_router(config: AppConfig) -> Router {
-    let state = AppState::new(config);
+pub async fn get_router(config: AppConfig) -> Result<Router,AppError> {
+    let state: AppState = AppState::new(config).await.unwrap();
 
     let api = Router::new()
         .route("/sign_in", post(sign_in_handler))
@@ -49,8 +55,8 @@ pub fn get_router(config: AppConfig) -> Router {
             .delete(delete_chat_handler)
             .post(send_message_handler))
         .route("/chat/{id}/message", get(list_message_handler));
-    Router::new()
+    Ok(Router::new()
         .route("/api", get(index_handler))
         .nest("/api", api)
-        .with_state(state)
+        .with_state(state))
 }

@@ -16,8 +16,8 @@ async fn main() -> Result<()>{
         .init();
 
     let config = AppConfig::load()?;
-    let addr = format!("{}:{}", config.server.host, config.server.port);
-    let app = get_router(config);
+    let addr = format!("{}:{}", "0.0.0.0", config.server.port);
+    let app = get_router(config).await?;
     let listener = tokio::net::TcpListener::bind(&addr).await?;
     info!("listening on {}", addr);
 

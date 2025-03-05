@@ -11,3 +11,9 @@ pub struct User {
     pub created_at: Option<NaiveDateTime>,
 }
 
+#[derive(Debug,Clone,Serialize, Deserialize)]
+pub struct CreateUser {
+    pub username: String,
+    pub password: String,
+}
+

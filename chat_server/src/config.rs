@@ -7,7 +7,7 @@ pub struct AppConfig {
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ServerConfig {
-    pub host: String,
+    pub db_url: String,
     pub port: u16,
 }
 

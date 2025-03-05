@@ -9,8 +9,11 @@ anyhow = "1.0.97"
 axum = { version = "0.8.1", features = ["multipart"] }
 serde = "1.0.218"
 serde_yaml = "0.9.34"
-sqlx = { version = "0.8.3",features = ["postgres","runtime-tokio-rustls"] }
+sqlx = { version = "0.8.3",features = ["postgres", "runtime-tokio-rustls", "chrono", "tls-rustls"] }
 thiserror = "2.0.12"
 tokio = { version = "1.43.0", features = ["full"] }
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19",features = [] }
+argon2 = "0.5.3"
+chrono = {version = "0.4.40",features = ["serde"]}
+jwt-simple = { version = "0.12.12", default-features = false, features = ["pure-rust"] }
