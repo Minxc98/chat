@@ -1,0 +1,16 @@
+[workspace]
+members = [
+    "chat_server"
+]
+resolver = "2"
+
+[workspace.dependencies]
+anyhow = "1.0.97"
+axum = { version = "0.8.1", features = ["multipart"] }
+serde = "1.0.218"
+serde_yaml = "0.9.34"
+sqlx = { version = "0.8.3",features = ["postgres","runtime-tokio-rustls"] }
+thiserror = "2.0.12"
+tokio = { version = "1.43.0", features = ["full"] }
+tracing = "0.1.41"
+tracing-subscriber = { version = "0.3.19",features = [] }
