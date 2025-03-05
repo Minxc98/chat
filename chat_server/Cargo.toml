@@ -5,10 +5,12 @@ edition = "2021"
 
 [dependencies]
 anyhow = { workspace = true }
+argon2 = { workspace = true }
 axum = { workspace = true }
+chrono = { workspace = true }
 serde = { workspace = true }
 serde_yaml = { workspace = true }
-sqlx = { workspace = true }
+sqlx = { workspace = true, features = ["derive"] }
 thiserror = { workspace = true }
 tokio = { workspace = true }
 tracing = { workspace = true }

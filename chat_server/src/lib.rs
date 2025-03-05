@@ -1,11 +1,16 @@
 mod config;
 mod handlers;
+mod models;
+mod error;
+
 use handlers::*;
 use std::ops::Deref;
 use std::sync::Arc;
 use axum::Router;
 use axum::routing::{get, patch, post};
 pub use config::*;
+pub use models::*;
+pub use error::*;
 #[derive(Debug, Clone)]
 pub(crate) struct AppState {
     inner: Arc<AppStateInner>,
