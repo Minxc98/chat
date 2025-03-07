@@ -17,3 +17,4 @@ tracing-subscriber = { version = "0.3.19",features = [] }
 argon2 = "0.5.3"
 chrono = {version = "0.4.40",features = ["serde"]}
 jwt-simple = { version = "0.12.12", default-features = false, features = ["pure-rust"] }
+http-body-util  = "0.1.2"

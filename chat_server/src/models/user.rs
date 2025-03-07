@@ -5,8 +5,21 @@ use argon2::{
 
 use crate::{AppError, User};
 use anyhow::Result;
+use serde::{Deserialize, Serialize};
 
-use super::CreateUser;
+
+
+#[derive(Debug,Clone,Serialize, Deserialize)]
+pub struct CreateUser {
+    pub username: String,
+    pub password: String,
+}
+
+#[derive(Debug,Clone,Serialize, Deserialize)]
+pub struct SignInUser {
+    pub username: String,
+    pub password: String,
+}
 
 impl User {
     pub async fn find_by_username(
@@ -49,14 +62,12 @@ impl User {
     }
 
     pub async fn verify_password(
-        &self,
-        username: &str,
-        password: &str,
+        input: &SignInUser,
         pool: &sqlx::PgPool,
     ) -> Result<bool, AppError> {
-        let user = Self::find_by_username(pool, username).await?;
+        let user = Self::find_by_username(pool, &input.username).await?;
         if let Some(user) = user {
-            verify_password(password, &user.password)
+            verify_password(&input.password, &user.password)
         } else {
             Err(AppError::InvalidCredentials)
         }
@@ -86,7 +97,9 @@ fn verify_password(password: &str, hashed_password: &str) -> Result<bool, AppErr
 
 #[cfg(test)]
 mod tests {
+
     use super::*;
+    use jwt_simple::prelude::ES256KeyPair;
     use sqlx_db_tester::TestPg;
     
     #[tokio::test]
@@ -104,4 +117,17 @@ mod tests {
         assert_eq!(user.username, "testuser");
         Ok(())
     }
+
+    //生成公钥和私钥
+    #[tokio::test]
+    async fn generate_key_pair_test() -> Result<()> {
+        let key_pair = ES256KeyPair::generate();
+        let public_key = key_pair.public_key();
+        //打印公钥和私钥
+        println!("public_key:\n{:?}", public_key.to_pem());
+        println!("private_key:\n{:?}", key_pair.to_pem());
+        Ok(())
+    }
 }
+
+

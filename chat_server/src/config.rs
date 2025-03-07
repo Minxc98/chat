@@ -4,11 +4,17 @@ use std::fs::File;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppConfig {
     pub server: ServerConfig,
+    pub key_pair: KeyPairConfig,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ServerConfig {
     pub db_url: String,
     pub port: u16,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct KeyPairConfig {
+    pub private_key: String,
+    pub public_key: String,
 }
 
 impl AppConfig {

@@ -3,7 +3,6 @@ mod config;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, Layer as _};
 use tracing::{info, level_filters::LevelFilter as Level};
 use anyhow::Result;
-use axum::handler::Layered;
 use tracing_subscriber::fmt::Layer;
 use chat_server::{get_router, AppConfig};
 
@@ -25,3 +24,5 @@ async fn main() -> Result<()>{
 
     Ok(())
 }
+
+

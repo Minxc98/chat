@@ -1,3 +1,15 @@
 server:
   db_url: postgres://postgres:postgres@localhost:5432/chat
   port: 8080
+key_pair:
+  private_key: |-
+    -----BEGIN PRIVATE KEY-----
+    MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgBk1QZyYdS8XzblCS
+    sDhBKR0ylidftbMqrbnTAG9vVAihRANCAATprMJp0ZFk9Yqf7yMvWzica6hjrwlx
+    qdOvE5uvwiiyy6cUdAnjZOZOlKo8gTPKO2sJmtHC2R6kvTYRowWkE/fE
+    -----END PRIVATE KEY-----
+  public_key: |-
+    -----BEGIN PUBLIC KEY-----
+    MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE6azCadGRZPWKn+8jL1s4nGuoY68J
+    canTrxObr8IossunFHQJ42TmTpSqPIEzyjtrCZrRwtkepL02EaMFpBP3xA==
+    -----END PUBLIC KEY-----

@@ -7,11 +7,19 @@ mod utils;
 use handlers::*;
 use std::ops::Deref;
 use std::sync::Arc;
+use axum::handler::Handler;
 use axum::Router;
 use axum::routing::{get, patch, post};
+use tower::ServiceBuilder;
+use tower_http::compression::CompressionLayer;
+use tower_http::LatencyUnit;
+use tower_http::trace::{DefaultMakeSpan, DefaultOnRequest, DefaultOnResponse, TraceLayer};
+use tracing::Level;
 pub use config::*;
 pub use models::*;
 pub use error::*;
+pub use utils::*;
+
 #[derive(Debug, Clone)]
 pub(crate) struct AppState {
     inner: Arc<AppStateInner>,
@@ -31,6 +39,7 @@ impl Deref for AppState {
 }
 
 impl AppState {
+    
     pub async fn new(config: AppConfig) -> Result<Self,AppError> {
         let pool = sqlx::PgPool::connect(&config.server.db_url)
             .await
@@ -42,9 +51,10 @@ impl AppState {
             }),
         })
     }
+    
 }
 pub async fn get_router(config: AppConfig) -> Result<Router,AppError> {
-    let state: AppState = AppState::new(config).await.unwrap();
+    let state: AppState = AppState::new(config).await?;
 
     let api = Router::new()
         .route("/sign_in", post(sign_in_handler))
@@ -55,8 +65,9 @@ pub async fn get_router(config: AppConfig) -> Result<Router,AppError> {
             .delete(delete_chat_handler)
             .post(send_message_handler))
         .route("/chat/{id}/message", get(list_message_handler));
-    Ok(Router::new()
+    Ok(set_router_layers(Router::new()
         .route("/api", get(index_handler))
         .nest("/api", api)
-        .with_state(state))
+        .with_state(state)))
+
 }

@@ -1,1 +1,16 @@
-GET http://localhost:8080/api/chat
+POST http://localhost:8080/api/sign_up
+Content-Type: application/json
+
+{
+    "username": "testuser",
+    "password": "password123"
+}
+
+### sign in
+POST http://localhost:8080/api/sign_in
+Content-Type: application/json
+
+{
+    "username": "testuser",
+    "password": "password123"
+}
