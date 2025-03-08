@@ -310,7 +310,6 @@ dependencies = [
  "argon2",
  "axum",
  "chrono",
- "http-body-util",
  "jwt-simple",
  "serde",
  "serde_yaml",
