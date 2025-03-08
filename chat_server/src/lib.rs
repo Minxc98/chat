@@ -3,6 +3,7 @@ mod handlers;
 mod models;
 mod error;
 mod utils;
+mod middlewares;
 
 use handlers::*;
 use std::ops::Deref;
@@ -10,15 +11,11 @@ use std::sync::Arc;
 use axum::handler::Handler;
 use axum::Router;
 use axum::routing::{get, patch, post};
-use tower::ServiceBuilder;
-use tower_http::compression::CompressionLayer;
-use tower_http::LatencyUnit;
-use tower_http::trace::{DefaultMakeSpan, DefaultOnRequest, DefaultOnResponse, TraceLayer};
-use tracing::Level;
 pub use config::*;
 pub use models::*;
 pub use error::*;
 pub use utils::*;
+pub use middlewares::*;
 
 #[derive(Debug, Clone)]
 pub(crate) struct AppState {

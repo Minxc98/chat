@@ -24,7 +24,8 @@ pub(crate) async fn sign_in_handler(
     //返回header x-token
     let mut headers = HeaderMap::new();
     headers.insert(
-        header::SET_COOKIE,
+        //x-request-id
+        header::HeaderName::from_static("x-token"),
         format!("token={}", token).parse().unwrap(),
     );
     Ok((headers, Json(payload)))
