@@ -1,13 +1,13 @@
+use axum::middleware::from_fn;
 use axum::Router;
 use tower::ServiceBuilder;
 use tower_http::compression::CompressionLayer;
 use tower_http::LatencyUnit;
 use tower_http::trace::{DefaultMakeSpan, DefaultOnRequest, DefaultOnResponse, TraceLayer};
 use tracing::Level;
+use crate::middlewares::request_id::set_request_id;
 
 mod request_id;
-
-
 
 pub fn set_router_layers(app : Router) -> Router{
     app.layer(
@@ -25,6 +25,7 @@ pub fn set_router_layers(app : Router) -> Router{
                         .latency_unit(LatencyUnit::Micros)
                 ))
             .layer(CompressionLayer::new().gzip(true).br(true).deflate(true))
+            .layer(from_fn(set_request_id))
     )
 
 }

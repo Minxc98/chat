@@ -26,7 +26,7 @@ pub(crate) async fn sign_in_handler(
     headers.insert(
         //x-request-id
         header::HeaderName::from_static("x-token"),
-        format!("token={}", token).parse().unwrap(),
+        token.parse().unwrap(),
     );
     Ok((headers, Json(payload)))
 }
