@@ -29,11 +29,8 @@ pub async fn set_request_id(
         }
     };
     let mut response = next.run(req).await;
-    match req_id {
-        Some(v) => {
-            response.headers_mut().insert(REQUEST_ID_HEADER,v.clone());
-        }
-        _ => {}
+    if let Some(v) =  req_id {
+        response.headers_mut().insert(REQUEST_ID_HEADER,v.clone());
     }
     response
    

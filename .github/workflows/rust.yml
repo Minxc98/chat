@@ -8,7 +8,6 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  SQLX_OFFLINE: true  # 设置 SQLX_OFFLINE 环境变量
 
 jobs:
   build:
@@ -19,7 +18,7 @@ jobs:
         # Docker Hub image
         image: postgres:15
         env:
-          POSTGRES_DB: postgres
+          POSTGRES_DB: chat
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         options: >-
@@ -30,8 +29,22 @@ jobs:
         ports:
           - 5432:5432
     steps:
-      - uses: actions/checkout@v4
-      - name: Build
-        run: cargo build --verbose
-      - name: Run tests
-        run: cargo test --verbose
+    - uses: actions/checkout@v4
+      # 安装 sqlx-cli 工具
+    - name: Install sqlx-cli
+      run: cargo install sqlx-cli --no-default-features --features native-tls,postgres
+
+      # 创建数据库
+    - name: Create database
+      run: sqlx database create
+      env:
+        DATABASE_URL: postgres://postgres:postgres@localhost:5432/chat
+      # 运行迁移
+    - name: Run migrations
+      run: sqlx migrate run
+      env:
+        DATABASE_URL: postgres://postgres:postgres@localhost:5432/chat
+    - name: Build
+      run: cargo build --verbose
+    - name: Run tests
+      run: cargo test --verbose
