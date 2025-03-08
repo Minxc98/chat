@@ -29,8 +29,28 @@ jobs:
         ports:
           - 5432:5432
     steps:
-    - uses: actions/checkout@v4
-    - name: Build
-      run: cargo build --verbose
-    - name: Run tests
-      run: cargo test --verbose
+      - uses: actions/checkout@v4
+      
+      # 安装 sqlx-cli 工具
+      - name: Install sqlx-cli
+        run: cargo install sqlx-cli --no-default-features --features native-tls,postgres
+      
+      # 创建数据库
+      - name: Create database
+        run: sqlx database create
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+      
+      # 运行迁移
+      - name: Run migrations
+        run: sqlx migrate run
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+      
+      # 构建项目
+      - name: Build
+        run: cargo build --verbose
+      
+      # 运行测试
+      - name: Run tests
+        run: cargo test --verbose
