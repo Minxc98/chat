@@ -10,6 +10,7 @@ use crate::middlewares::server_time::ServerTimeLayer;
 
 mod request_id;
 mod server_time;
+mod auth;
 
 pub fn set_router_layers(app : Router) -> Router{
     app.layer(
