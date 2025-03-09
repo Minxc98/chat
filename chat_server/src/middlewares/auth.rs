@@ -1,6 +1,6 @@
 use crate::AppState;
 use axum::extract::{FromRequestParts, Request, State};
-use axum::http::{HeaderValue, StatusCode};
+use axum::http::StatusCode;
 use axum::middleware::Next;
 use axum::response::{IntoResponse, Response};
 use axum_extra::headers::authorization::Bearer;

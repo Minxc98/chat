@@ -1,12 +1,10 @@
 use std::collections::HashSet;
-use std::ops::Deref;
 
 use crate::models::user::SignInUser;
 use crate::{AppError, KeyPairConfig, User};
 use jwt_simple::common::VerificationOptions;
 use jwt_simple::prelude::*;
 use jwt_simple::prelude::{EdDSAKeyPairLike, EdDSAPublicKeyLike};
-use tracing::warn;
 
 const JWT_DURATION: u64 = 7; // 7 days
 
@@ -47,12 +45,10 @@ pub fn generate_jwt_token(user: SignInUser, config: &KeyPairConfig) -> Result<St
     Ok(key_pair.sign(claims)?)
 }
 
-// ... 文件原有代码保持不变 ...
-
 #[cfg(test)]
 mod tests {
     use super::*;
-    use jwt_simple::prelude::Ed25519KeyPair;
+    
 
     #[test]
     fn test_keypair_loading() {

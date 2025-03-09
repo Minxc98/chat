@@ -1,4 +1,4 @@
-use axum::{body::Body, extract::Request, response::Response};
+use axum::{extract::Request, response::Response};
 use std::future::Future;
 use std::pin::Pin;
 use std::task::{Context, Poll};

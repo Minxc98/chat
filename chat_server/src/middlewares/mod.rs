@@ -1,7 +1,6 @@
 use crate::middlewares::request_id::set_request_id;
 use crate::middlewares::server_time::ServerTimeLayer;
-use crate::AppState;
-use axum::middleware::{from_fn, from_fn_with_state};
+use axum::middleware::from_fn;
 use axum::Router;
 use tower::ServiceBuilder;
 use tower_http::compression::CompressionLayer;
