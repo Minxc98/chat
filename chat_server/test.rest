@@ -3,7 +3,9 @@ Content-Type: application/json
 
 {
     "username": "testuser",
-    "password": "password123"
+  "email" : "123444@qq.com",
+    "password": "password123",
+  "ws_id": 1
 }
 
 ### sign in

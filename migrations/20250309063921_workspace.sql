@@ -11,10 +11,15 @@ ALTER TABLE users ADD COLUMN email VARCHAR(255) NOT NULL UNIQUE;
 --添加workspace
 create table if not exists workspaces (
     id serial primary key,
-    name varchar(50) not null,
+    name varchar(50) not null unique,
     owner_id integer not null,
     created_at timestamp default current_timestamp
 );
 --添加workspace for users
-ALTER TABLE users ADD COLUMN ws_id INTEGER Not NULL DEFAULT 1 ;
+ALTER TABLE users ADD COLUMN ws_id INTEGER Not NULL ;
+--insert super user
+begin;
+INSERT into users (id,ws_id, username, password_hash) VALUES (0,0,'admin', '');
+insert into workspaces (id,name,owner_id) values (0,'admin',0);
+commit;
 

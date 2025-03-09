@@ -32,3 +32,5 @@ CREATE TABLE IF NOT EXISTS groups (
 CREATE INDEX idx_user_ids ON chats USING GIN (user_ids);
 CREATE INDEX idx_chat_id ON messages(chat_id);
 CREATE INDEX idx_sender_id ON messages(sender_id);
+
+

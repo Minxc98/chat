@@ -48,7 +48,6 @@ pub fn generate_jwt_token(user: SignInUser, config: &KeyPairConfig) -> Result<St
 #[cfg(test)]
 mod tests {
     use super::*;
-    
 
     #[test]
     fn test_keypair_loading() {

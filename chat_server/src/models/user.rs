@@ -3,14 +3,17 @@ use argon2::{
     Argon2, PasswordHash, PasswordHasher, PasswordVerifier,
 };
 
-use crate::{AppError, User};
+use crate::models::workspace;
+use crate::models::workspace::*;
+use crate::{AppError, User, Workspace};
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
-
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CreateUser {
     pub username: String,
+    pub email: String,
     pub password: String,
+    pub workspace: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -40,16 +43,23 @@ impl User {
 
     //create user
     pub async fn create(pool: &sqlx::PgPool, user: &CreateUser) -> Result<Self, AppError> {
+        //check if the workspace is exist
+        let workspace = match Workspace::find_by_name(pool, &user.workspace).await? {
+            Some(ws) => ws,
+            None => Workspace::create(pool, &user.workspace, 1).await?,
+        };
         let hashed_password = hash_password(&user.password)?;
         let user = sqlx::query_as(
             r#"
-            INSERT INTO users (username, password_hash) 
-            VALUES ($1, $2) 
+            INSERT INTO users (username, password_hash ,email,ws_id)
+            VALUES ($1, $2 ,$3,$4)
             RETURNING id, username ,ws_id, created_at
             "#,
         )
         .bind(&user.username)
         .bind(&hashed_password)
+        .bind(&user.email)
+        .bind(workspace.id)
         .fetch_one(pool)
         .await?;
         Ok(user)
@@ -104,6 +114,8 @@ mod tests {
             &CreateUser {
                 username: "testuser".to_string(),
                 password: "password123".to_string(),
+                email: "123@11.com".to_string(),
+                ws_id: 1i32,
             },
         )
         .await?;
