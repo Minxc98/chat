@@ -19,7 +19,7 @@ create table if not exists workspaces (
 ALTER TABLE users ADD COLUMN ws_id INTEGER Not NULL ;
 --insert super user
 begin;
-INSERT into users (id,ws_id, username, password_hash) VALUES (0,0,'admin', '');
+INSERT into users (id,ws_id, username,email, password_hash) VALUES (0,0,'admin','admin@qq.com' ,'');
 insert into workspaces (id,name,owner_id) values (0,'admin',0);
 commit;
 

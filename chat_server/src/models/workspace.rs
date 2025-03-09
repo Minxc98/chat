@@ -11,10 +11,10 @@ impl Workspace {
             "#,
         )
         .bind(&workspace_name)
-        .fetch_one(pool)
+        .fetch_optional(pool)
         .await?;
 
-        Ok(Some(workspace))
+        Ok(workspace)
     }
 
     pub async fn create(pool: &sqlx::PgPool, name: &str, user_id: i32) -> Result<Self, AppError> {
@@ -48,10 +48,12 @@ impl Workspace {
     }
 }
 
-#[test]
-fn test() {
+#[cfg(test)]
+mod tests {
 
     use sqlx_db_tester::TestPg;
+    use crate::Workspace;
+
     #[tokio::test]
     async fn test_create_workspace() {
         let tdb = TestPg::new(
@@ -62,6 +64,18 @@ fn test() {
         let workspace = Workspace::create(&pool, "test", 1).await.unwrap();
         assert_eq!(workspace.name, "test");
         assert_eq!(workspace.owner_id, 1);
+    }
+
+    #[tokio::test]
+    async fn test_find_workspace_by_name() {
+        let tdb = TestPg::new(
+            "postgres://postgres:postgres@localhost:5432".to_string(),
+            std::path::Path::new("../migrations"),
+        );
+        let pool = tdb.get_pool().await;
+        let workspace = Workspace::create(&pool, "test", 1).await.unwrap();
+        let workspace = Workspace::find_by_name(&pool, "test").await.unwrap();
+        assert_eq!(workspace.unwrap().name, "test");
     }
 
     #[tokio::test]

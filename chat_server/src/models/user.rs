@@ -3,8 +3,6 @@ use argon2::{
     Argon2, PasswordHash, PasswordHasher, PasswordVerifier,
 };
 
-use crate::models::workspace;
-use crate::models::workspace::*;
 use crate::{AppError, User, Workspace};
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
@@ -115,7 +113,7 @@ mod tests {
                 username: "testuser".to_string(),
                 password: "password123".to_string(),
                 email: "123@11.com".to_string(),
-                ws_id: 1i32,
+                workspace: "213456789".to_string(),
             },
         )
         .await?;
