@@ -1,7 +1,13 @@
-use axum::{extract::State, http::{header, HeaderMap, StatusCode}, response::IntoResponse, Json};
+use axum::{
+    extract::State,
+    http::{header, HeaderMap, StatusCode},
+    response::IntoResponse,
+    Json,
+};
 
 use crate::{
-    models::user::{CreateUser, SignInUser}, utils, AppError, AppState, User
+    models::user::{CreateUser, SignInUser},
+    utils, AppError, AppState, User,
 };
 
 pub(crate) async fn sign_up_handler(

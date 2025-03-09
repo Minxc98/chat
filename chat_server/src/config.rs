@@ -1,5 +1,5 @@
-use serde::{Serialize, Deserialize};
 use anyhow::{bail, Result};
+use serde::{Deserialize, Serialize};
 use std::fs::File;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppConfig {
@@ -21,7 +21,7 @@ impl AppConfig {
     pub fn load() -> Result<Self> {
         let ret = match (
             File::open("chat_server/app.yml"),
-            File::open("/etc/config/app.yml")
+            File::open("/etc/config/app.yml"),
         ) {
             (Ok(file), _) => serde_yaml::from_reader(file),
             (_, Ok(file)) => serde_yaml::from_reader(file),

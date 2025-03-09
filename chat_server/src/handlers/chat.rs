@@ -1,6 +1,6 @@
 use axum::response::IntoResponse;
 
-pub(crate) async fn list_chat_handler() -> impl IntoResponse{
+pub(crate) async fn list_chat_handler() -> impl IntoResponse {
     "list_chat".to_string()
 }
 

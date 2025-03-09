@@ -7,15 +7,13 @@ use crate::{AppError, User};
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
 
-
-
-#[derive(Debug,Clone,Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CreateUser {
     pub username: String,
     pub password: String,
 }
 
-#[derive(Debug,Clone,Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SignInUser {
     pub username: String,
     pub password: String,
@@ -29,33 +27,29 @@ impl User {
         let user = sqlx::query_as!(
             User,
             r#"
-            SELECT id, username, password, COALESCE(created_at, NOW())::TIMESTAMP as created_at 
+            SELECT id, username, password_hash,ws_id, COALESCE(created_at, NOW())::TIMESTAMP as created_at 
             FROM users 
             WHERE username = $1
             "#,
             username
         )
-        .fetch_optional(pool)
-        .await?;
+            .fetch_optional(pool)
+            .await?;
         Ok(user)
     }
 
     //create user
-    pub async fn create(
-        pool: &sqlx::PgPool,
-        user: &CreateUser,
-    ) -> Result<Self, AppError> {
+    pub async fn create(pool: &sqlx::PgPool, user: &CreateUser) -> Result<Self, AppError> {
         let hashed_password = hash_password(&user.password)?;
-        let user = sqlx::query_as!(
-            User,
+        let user = sqlx::query_as(
             r#"
-            INSERT INTO users (username, password) 
+            INSERT INTO users (username, password_hash) 
             VALUES ($1, $2) 
-            RETURNING id, username, password, created_at
+            RETURNING id, username ,ws_id, created_at
             "#,
-            user.username,
-            hashed_password
         )
+        .bind(&user.username)
+        .bind(&hashed_password)
         .fetch_one(pool)
         .await?;
         Ok(user)
@@ -67,13 +61,11 @@ impl User {
     ) -> Result<bool, AppError> {
         let user = Self::find_by_username(pool, &input.username).await?;
         if let Some(user) = user {
-            verify_password(&input.password, &user.password)
+            verify_password(&input.password, &user.password_hash.unwrap_or_default())
         } else {
             Err(AppError::InvalidCredentials)
         }
     }
-
-    
 }
 
 fn hash_password(password: &str) -> Result<String, AppError> {
@@ -94,25 +86,27 @@ fn verify_password(password: &str, hashed_password: &str) -> Result<bool, AppErr
         .is_ok())
 }
 
-
 #[cfg(test)]
 mod tests {
-
     use super::*;
     use jwt_simple::prelude::ES256KeyPair;
     use sqlx_db_tester::TestPg;
-    
+
     #[tokio::test]
     async fn user_create_test() -> Result<()> {
         let tdb = TestPg::new(
-                "postgres://postgres:postgres@localhost:5432".to_string(),
-                std::path::Path::new("../migrations"),
-            );
+            "postgres://postgres:postgres@localhost:5432".to_string(),
+            std::path::Path::new("../migrations"),
+        );
         let pool = tdb.get_pool().await;
-        let user = User::create(&pool, &CreateUser {
-            username: "testuser".to_string(),
-            password: "password123".to_string(),
-        }).await?;
+        let user = User::create(
+            &pool,
+            &CreateUser {
+                username: "testuser".to_string(),
+                password: "password123".to_string(),
+            },
+        )
+        .await?;
         assert!(user.id > 0);
         assert_eq!(user.username, "testuser");
         Ok(())
@@ -129,5 +123,3 @@ mod tests {
         Ok(())
     }
 }
-
-

@@ -1,6 +1,8 @@
-use axum::{http::{self, StatusCode}, response::{IntoResponse, Response}};
+use axum::{
+    http::{self, StatusCode},
+    response::{IntoResponse, Response},
+};
 use jwt_simple::reexports::serde_json;
-
 
 #[derive(Debug, thiserror::Error)]
 pub enum AppError {
@@ -24,8 +26,12 @@ impl IntoResponse for AppError {
     fn into_response(self) -> Response {
         match self {
             Self::Database(e) => (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()).into_response(),
-            Self::InvalidCredentials => (StatusCode::UNAUTHORIZED, "Invalid credentials").into_response(),
-            Self::PasswordHashError => (StatusCode::INTERNAL_SERVER_ERROR, "Password hash error").into_response(),
+            Self::InvalidCredentials => {
+                (StatusCode::UNAUTHORIZED, "Invalid credentials").into_response()
+            }
+            Self::PasswordHashError => {
+                (StatusCode::INTERNAL_SERVER_ERROR, "Password hash error").into_response()
+            }
             Self::Jwt(e) => (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()).into_response(),
             Self::Json(e) => (StatusCode::BAD_REQUEST, e.to_string()).into_response(),
             Self::Http(e) => (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()).into_response(),
@@ -33,4 +39,3 @@ impl IntoResponse for AppError {
         }
     }
 }
-

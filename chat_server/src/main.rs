@@ -1,18 +1,15 @@
 mod config;
 
-use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, Layer as _};
-use tracing::{info, level_filters::LevelFilter as Level};
 use anyhow::Result;
-use tracing_subscriber::fmt::Layer;
 use chat_server::{get_router, AppConfig};
+use tracing::{info, level_filters::LevelFilter as Level};
+use tracing_subscriber::fmt::Layer;
+use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, Layer as _};
 
 #[tokio::main]
-async fn main() -> Result<()>{
-
+async fn main() -> Result<()> {
     let layer = Layer::new().with_filter(Level::INFO);
-    tracing_subscriber::registry()
-        .with(layer)
-        .init();
+    tracing_subscriber::registry().with(layer).init();
 
     let config = AppConfig::load()?;
     let addr = format!("{}:{}", "0.0.0.0", config.server.port);
@@ -24,5 +21,3 @@ async fn main() -> Result<()>{
 
     Ok(())
 }
-
-
