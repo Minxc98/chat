@@ -10,6 +10,7 @@ pub struct AppConfig {
 pub struct ServerConfig {
     pub db_url: String,
     pub port: u16,
+    pub redis_url: String,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct KeyPairConfig {

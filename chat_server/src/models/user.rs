@@ -25,17 +25,16 @@ impl User {
         pool: &sqlx::PgPool,
         username: &str,
     ) -> Result<Option<Self>, AppError> {
-        let user = sqlx::query_as!(
-            User,
+        let user = sqlx::query_as(
             r#"
-            SELECT id, username, password_hash,ws_id, COALESCE(created_at, NOW())::TIMESTAMP as created_at 
-            FROM users 
+            SELECT id, username, password_hash,ws_id, COALESCE(created_at, NOW())::TIMESTAMP as created_at
+            FROM users
             WHERE username = $1
             "#,
-            username
         )
-            .fetch_optional(pool)
-            .await?;
+        .bind(&username)
+        .fetch_optional(pool)
+        .await?;
         Ok(user)
     }
 

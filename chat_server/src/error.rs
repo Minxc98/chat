@@ -20,6 +20,8 @@ pub enum AppError {
     Http(#[from] http::Error),
     #[error("Axum error: {0}")]
     Axum(#[from] axum::Error),
+    #[error("Redis error: {0}")]
+    Redis(#[from] redis::RedisError),
 }
 
 impl IntoResponse for AppError {
@@ -36,6 +38,7 @@ impl IntoResponse for AppError {
             Self::Json(e) => (StatusCode::BAD_REQUEST, e.to_string()).into_response(),
             Self::Http(e) => (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()).into_response(),
             Self::Axum(e) => (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()).into_response(),
+            Self::Redis(e) => (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()).into_response(),
         }
     }
 }

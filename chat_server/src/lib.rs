@@ -30,6 +30,7 @@ pub(crate) struct AppStateInner {
     pub(crate) config: AppConfig,
     pub(crate) ek: EncodingKey,
     pub(crate) dk: DecodingKey,
+    pub(crate) redis_client: redis::Client,
 }
 
 impl Deref for AppState {
@@ -43,6 +44,7 @@ impl AppState {
     pub async fn new(config: AppConfig) -> Result<Self, AppError> {
         let ek = EncodingKey::load(&config.key_pair.private_key)?;
         let dk = DecodingKey::load(&config.key_pair.public_key)?;
+        let redis_client = redis::Client::open(config.server.redis_url.clone())?;
         let pool = sqlx::PgPool::connect(&config.server.db_url)
             .await
             .map_err(|_| {
@@ -56,6 +58,7 @@ impl AppState {
                 config,
                 ek,
                 dk,
+                redis_client,
             }),
         })
     }
@@ -88,5 +91,24 @@ impl fmt::Debug for AppStateInner {
             .field("pool", &self.pool)
             .field("config", &self.config)
             .finish()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use redis::Commands;
+    use super::*;
+
+    #[test]
+    fn test_redis_connection() -> Result<(), AppError> {
+        let client = redis::Client::open("redis://127.0.0.1/")?;
+        let mut con = client.get_connection()?;
+        con.set("hello", "world")?;
+        let value: String = con.get("hello")?;
+        assert_eq!(value, "world");
+
+        /* do something here */
+
+        Ok(())
     }
 }
