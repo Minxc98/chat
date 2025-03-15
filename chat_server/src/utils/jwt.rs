@@ -39,12 +39,6 @@ impl DecodingKey {
     }
 }
 
-pub fn generate_jwt_token(user: SignInUser, config: &KeyPairConfig) -> Result<String, AppError> {
-    let key_pair = Ed25519KeyPair::from_pem(&config.private_key)?;
-    let claims = Claims::with_custom_claims(user, Duration::from_days(JWT_DURATION));
-    Ok(key_pair.sign(claims)?)
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;

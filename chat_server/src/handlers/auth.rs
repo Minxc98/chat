@@ -26,13 +26,7 @@ pub(crate) async fn sign_in_handler(
     if !is_valid {
         return Err(AppError::InvalidCredentials);
     }
-    let token = utils::jwt::generate_jwt_token(payload.clone(), &state.config.key_pair)?;
-    //返回header x-token
-    let mut headers = HeaderMap::new();
-    headers.insert(
-        //x-request-id
-        header::HeaderName::from_static("x-token"),
-        token.parse().unwrap(),
-    );
-    Ok((headers, Json(payload)))
+    let user = User::find_by_username( &state.pool, &payload.username).await?.ok_or(AppError::InvalidCredentials)?;
+    let jwt = state.ek.sign(user)?;
+    Ok(Json(jwt))
 }
