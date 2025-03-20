@@ -19,7 +19,6 @@ pub struct SignInUser {
     pub username: String,
     pub password: String,
 }
-
 impl User {
     pub async fn find_by_username(
         pool: &sqlx::PgPool,

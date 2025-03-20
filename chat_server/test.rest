@@ -5,6 +5,7 @@ Content-Type: application/json
     "username": "testuser",
   "email" : "123444@qq.com",
     "password": "password123",
+  "workspace": "test",
   "ws_id": 1
 }
 

@@ -11,8 +11,6 @@ axum-extra = { version = "0.10.0", features = ["typed-header"] }
 chrono = { workspace = true }
 jwt-simple = { workspace = true }
 redis = { version = "0.29.1", features = ["tokio-comp", "r2d2"] }
-rustls = { version = "0.23", features = ["ring"] }
-redis_rs = "0.9.0"
 serde = { workspace = true }
 serde_yaml = { workspace = true }
 sqlx = { workspace = true, features = ["derive"] }
