@@ -5,7 +5,7 @@ Content-Type: application/json
     "username": "testuser",
   "email" : "123444@qq.com",
     "password": "password123",
-  "workspace": "test",
+    "workspace": "test_wk",
   "ws_id": 1
 }
 
@@ -17,3 +17,8 @@ Content-Type: application/json
     "username": "testuser",
     "password": "password123"
 }
+
+### list chat
+GET http://localhost:8080/api/chat
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NDIwMTgwMzIsImV4cCI6MTc0MjYyMjgzMiwibmJmIjoxNzQyMDE4MDMyLCJpc3MiOiJjaGF0X3NlcnZlciIsImF1ZCI6ImNoYXRfd2ViIiwiaWQiOjEsInVzZXJuYW1lIjoidGVzdHVzZXIiLCJwYXNzd29yZF9oYXNoIjoiJGFyZ29uMmlkJHY9MTkkbT0xOTQ1Nix0PTIscD0xJGxTc0I1NHgwYUpvNVN4d3l4R0c1Z1EkWWlDK0tYRFRuNkZ5NjRub0FxcUd6STNOeVNkZW5sc3hERE9iWUV1QVdCOCIsIndzX2lkIjoxLCJjcmVhdGVkX2F0IjoiMjAyNS0wMy0xNVQwNTozMjowNy43MDgzMzgifQ.cmxdurkzBXl8R4EGvdoA15qKNf5cE45ld0IHXCyp7VuVumjOeIO4MFo3tQj9Nzezm0NsGacZxt-7wlLrBEcJCA

@@ -9,7 +9,7 @@ use crate::jwt::{DecodingKey, EncodingKey};
 use axum::handler::Handler;
 use axum::middleware::from_fn_with_state;
 use axum::routing::{get, patch, post};
-use axum::Router;
+use axum::{Extension, Router};
 pub use config::*;
 pub use error::*;
 use handlers::*;
@@ -18,6 +18,7 @@ pub use models::*;
 use std::fmt;
 use std::ops::Deref;
 use std::sync::Arc;
+use tower_http::trace::TraceLayer;
 pub use utils::*;
 
 #[derive(Debug, Clone)]
